@@ -20,27 +20,17 @@ logger = logging.getLogger(__name__)
 def main() -> int:
     load_dotenv()
 
-    try:
-        info = get_loc()
-    except (ConnectionError, TimeoutError, RuntimeError, ValueError) as e:
-        logger.error("Не удалось определить местоположение: %s", e)
-        return 1
+    info = get_loc()
 
     city = info["city"]
     loc = info["loc"]
-    if not city or not loc:
-        logger.error("Гео-API вернул неполные данные: %s", info)
-        return 1
 
     print(f"Город: {city}")
     print(f"Координаты: {loc}")
     lat, lon = (float(x) for x in loc.split(","))
 
-    try:
-        weather = get_weather(lat, lon)
-    except (ConnectionError, TimeoutError, RuntimeError, ValueError) as e:
-        logger.error("Ошибка получения прогноза: %s", e)
-        return 2
+    weather = get_weather(lat, lon)
+
 
     for d in weather:
         print(
@@ -49,21 +39,14 @@ def main() -> int:
             f"{d['description']}"
         )
 
-    try:
-        engine = get_engine()
-        init_db(engine)
-        saved = save_forecast(engine, city, weather)
-    except RuntimeError as e:
-        logger.error("Ошибка БД: %s", e)
-        return 3
+    engine = get_engine()
+    init_db(engine)
+    saved = save_forecast(engine, city, weather)
+
     print(f"Сохранено записей: {saved}")
 
-    try:
-        rows = load_forecast(engine, city)
-        path = export_to_markdown(city, rows)
-    except (RuntimeError, ValueError) as e:
-        logger.error("Ошибка экспорта: %s", e)
-        return 4
+    rows = load_forecast(engine, city)
+    path = export_to_markdown(city, rows)
     print(f"Отчёт: {path}")
 
     print("\nГотово.")
