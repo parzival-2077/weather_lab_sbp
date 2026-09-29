@@ -89,7 +89,6 @@ def load_forecast(engine, city: str) -> list[WeatherForecast]:
 
 
 def _to_date(value) -> date:
-    """Принимает либо 'YYYY-MM-DD', либо date — возвращает date."""
     if isinstance(value, date):
         return value
     return datetime.strptime(value, "%Y-%m-%d").date()
