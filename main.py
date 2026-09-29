@@ -29,7 +29,7 @@ def main() -> int:
     print(f"Координаты: {loc}")
     lat, lon = (float(x) for x in loc.split(","))
 
-    weather = get_weather(lat, lon)
+    weather = get_weather(city, lat, lon)
 
 
     for d in weather:
@@ -49,7 +49,7 @@ def main() -> int:
     path = export_to_markdown(city, rows)
     print(f"Отчёт: {path}")
 
-    print("\nГотово.")
+    print("\nПрограмма завершила свою работу.")
     return 0
 
 

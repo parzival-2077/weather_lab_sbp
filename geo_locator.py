@@ -12,10 +12,10 @@ def get_loc(timeout: float = 5.0):
         response = requests.get(url, timeout=timeout)
         response.raise_for_status()
         data = response.json()
-       # print(response
+       # print(response)
         city = data.get('city')
         loc = data.get("loc")
-        return {"city": city, "loc": loc, "raw": data}
+        return {"city": city, "loc": loc}
     
     except requests.exceptions.ConnectionError as e:
         raise ConnectionError("Ошибка соединения. Проверьте интернет.") from e

@@ -9,14 +9,30 @@ load_dotenv()
 url = os.getenv("WEATHER_API_BASE_URL")
 api_key = os.getenv("WEATHER_API_KEY")
 
-def get_weather(lat: float, lon: float, timeout:float = 10.0):
-    params = {
-        "lat": lat,
-        "lon": lon,
-        "appid": api_key,
-        "units": "metric",
-        "lang": "ru",
-    }
+def get_weather(
+        city: str | None = None,
+        lat: float | None = None,
+        lon: float | None = None,
+        timeout: float = 10.0):
+
+    if lat is not None and lon is not None:
+        params = {
+                "lat": lat,
+                "lon": lon,
+                "appid": api_key,
+                "units": "metric",
+                "lang": "ru",
+            }
+
+    elif city:
+        params = {
+            "q": city,
+            "appid": api_key,
+            "units": "metric",
+            "lang": "ru",
+        }
+    else:
+        raise ValueError("Нужно передать либо city, либо lat и lon.")
 
     try:
         response = requests.get(url, params=params, timeout=timeout)
